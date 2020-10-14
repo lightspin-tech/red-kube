@@ -23,7 +23,7 @@ sudo apt-get update -y
 sudo apt-get install -y jq
 ```
 
-### Available Tactics
+### Commands by MITRE ATT&CK Tactics
 | Tactic | Count |
 |-------|---------|
 | Initial Access  | 0 |
