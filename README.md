@@ -29,16 +29,20 @@ sudo apt-get install -y jq
 | Initial Access  | 0 |
 | Execution | 0 |
 | Persistence | 0 |
-| Privilege Escalation | 1 |
+| Privilege Escalation | 4 |
 | Defense Evasion | 0 |
 | Credential Access | 7 |
-| Discovery | 12 |
+| Discovery | 14 |
 | Lateral Movement | 0 |
 | Collection | 0 |
 | Command and Control | 1 |
 | Exfiltration | 0 |
 | Impact | 0 |
 
+## TODO
+Defense Evasion: Delete API Audit Logs
+Privilege Escalation: Using escalate verb
+Collection: Dump all configmaps and env to a file
 
 ## License
 This repository is available under the [Apache License 2.0](https://github.com/lightspin-tech/red-kube/blob/main/LICENSE).
