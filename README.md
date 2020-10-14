@@ -41,7 +41,9 @@ sudo apt-get install -y jq
 
 ## TODO
 Defense Evasion: Delete API Audit Logs
+
 Privilege Escalation: Using escalate verb
+
 Collection: Dump all configmaps and env to a file
 
 ## License
