@@ -41,4 +41,4 @@ sudo apt-get install -y jq
 
 
 ## License
-This repository is available under the [Apache License 2.0](https://https://github.com/lightspin-tech/red-kube/blob/master/LICENSE).
+This repository is available under the [Apache License 2.0](https://github.com/lightspin-tech/red-kube/blob/main/LICENSE).
