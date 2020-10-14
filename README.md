@@ -38,3 +38,7 @@ sudo apt-get install -y jq
 | Command and Control | 1 |
 | Exfiltration | 0 |
 | Impact | 0 |
+
+
+## License
+This repository is available under the [Apache License 2.0](https://https://github.com/lightspin-tech/red-kube/blob/master/LICENSE).
