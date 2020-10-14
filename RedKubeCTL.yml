@@ -10,6 +10,18 @@ id: get-privileged-containers
   description: Get Pods With Privileged Containers
   command: kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.privileged == true)).metadata.name'
 
+id: get-allow-pe-containers
+  description: Get Pods with Containers allowed to perform Privilege Escalation
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.allowPrivilegeEscalation == true)).metadata.name'
+
+id: get-run-user-0-containers
+  description: Get Pods with Containers running as Root
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.runAsUser == 0)).metadata.name'
+
+id: get-cap-admin-containers
+  description: Get Pods with Containers including System Admin Capability
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.spec.containers[].securityContext.capabilities.add | index("CAP_SYS_ADMIN") | select(. != null)).metadata.name'
+
 # DEFENSE EVASION
 
 # CREDENTIAL ACCESS
@@ -91,6 +103,14 @@ id: get-no-limit-containers
 id: get-container-images
   description: Get All Containers Images
   command: kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[].image' | sort | uniq
+
+id: get-clusterrole-wildcard
+  description: Get cluster roles with wildcard resources
+  command: kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( "*" )|select(. != null)).metadata.name'
+
+id: get-roles-wildcard
+  description: Get roles with wildcard resources
+  command: kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( "*" )|select(. != null)).metadata.name'
 
 # LATERAL MOVEMENT
 
