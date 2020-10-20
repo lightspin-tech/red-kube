@@ -1,3 +1,5 @@
+![red-kube](https://github.com/lightspin-tech/red-kube/blob/main/redcube.png)
+
 
 Red Team KubeCTL Cheat Sheet
 ==============================
