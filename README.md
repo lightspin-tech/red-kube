@@ -29,7 +29,7 @@ sudo apt-get install -y jq
 | Tactic | Count |
 |-------|---------|
 | Initial Access  | 0 |
-| Execution | 0 |
+| Execution | 1 |
 | Persistence | 0 |
 | Privilege Escalation | 4 |
 | Defense Evasion | 0 |
