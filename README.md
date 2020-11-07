@@ -41,6 +41,9 @@ sudo apt-get install -y jq
 | Exfiltration | 0 |
 | Impact | 0 |
 
+## Webinars
+#1 First Workshop with Lab01 and Lab02 [Webinar Link](https://zoom.us/rec/share/qu4zQw303STScxvBmZlfe0jHO5Be048TP75tS3SfnL5K4QUz4ruNqKWT4Ik-7KrU.Ja5Zf4QhA3ucpMHE?startTime=1602608144000)
+
 ## TODO
 Defense Evasion: Delete API Audit Logs
 
