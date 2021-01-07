@@ -1,0 +1,35 @@
+name: step01
+  description: deploy todo list app
+  command: kubectl apply -f todo-list-deployment.yaml
+
+name: step02
+  description: expose the todolist app
+  command: kubectl expose deployment todolist-deployment --type=NodePort --name=todolist-service
+
+name: step03
+  description: get the exposed service with port
+  command: kubectl get service todolist-service
+
+name: step04
+  description: access the web interface and add secret
+  command: null
+
+name: step05
+  description: get pods
+  command: kubectl get pods
+
+name: step06
+  description: access the privileged nginx from previous lab
+  command: kubectl exec -it nginx-deployment-<POD_ID> bash
+
+name: step07
+  description: access other container layers on host (can be other path if not minikube)
+  command: cd var/lib/docker/volumes/minikube/_data/lib/docker/overlay2
+
+name: step08
+  description: find the todo list app db
+  command: find / -iname "todo.db" | grep docker
+
+name: step09
+  description: cat the file found to access the unencrypted secret
+  command: cat <DB_FILE_PATH>

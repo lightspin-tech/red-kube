@@ -24,7 +24,7 @@ id: get-run-user-0-containers
 
 id: get-cap-admin-containers
   description: Get Pods with Containers including System Admin Capability
-  command: kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.spec.containers[].securityContext.capabilities.add | index("CAP_SYS_ADMIN") | select(. != null)).metadata.name'
+  command: kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.spec.containers[].securityContext.capabilities.add | index("SYS_ADMIN") | select(. != null)).metadata.name'
 
 # DEFENSE EVASION
 
