@@ -1,5 +1,5 @@
 import json
-import subprocess, platform
+import subprocess
 import argparse
 import sys
 from art import text2art
@@ -7,21 +7,7 @@ import termcolor
 from clint.textui import colored, puts, indent
 import time
 
-mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access"]
-
-
-def kubectl_path():
-    platform_name = platform.system()
-
-    if platform_name == "Linux":
-        w_proc = subprocess.Popen("which kubectl", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = w_proc.communicate()
-        k_path = stdout.decode()
-
-    if platform_name == "Windows":
-        k_path = "kubectl"
-
-    return k_path
+mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access", "persistence"]
 
 
 def kubectl_subproc(kubectl_command):
@@ -48,19 +34,32 @@ def run_kubectl(technique):
     technique_command = technique['command']
     technique_id = technique['id']
     technique_leading_to = technique['leading_to']
+    technique_mode = technique['mode']
+    technique_args = technique['args']
+
     puts(colored.white('\n'))
 
     with indent(4):
         puts(colored.yellow("ID:        "), newline=False), puts(colored.white("%s" % technique_id))
         puts(colored.yellow("Technique: "), newline=False), puts(colored.white("%s" % technique['name']))
         puts(colored.yellow("Command:   "), newline=False), puts(colored.white("%s" % technique_command))
-        out, err = kubectl_subproc(technique_command)
+
+        if technique_mode == 'passive':
+            if not technique_args:
+                out, err = kubectl_subproc(technique_command)
+        else:
+            puts(colored.red("This is an active command, it might need specific parameters, run on your own."))
+            time.sleep(2)
+            sys.exit()
 
         with indent(2):
 
             if out:
                 puts(colored.white('\n'))
-                puts(colored.green('✔  found\n'))
+                if scan_tactic == 'persistence':
+                    puts(colored.green('  command output: \n'))
+                else:
+                    puts(colored.green('✔  found\n'))
 
                 with indent(2):
                     puts(colored.green(out.decode()))
@@ -85,7 +84,7 @@ if __name__ == "__main__":
                         help='scan type (passive/active)', required=False)
     parser.add_argument('--tactic', action='store', dest='tactic', type=str,
                         help='specific tactic', required=False)
-    parser.add_argument('--show_tactics', action='store_true',help='show tactics')
+    parser.add_argument('--show_tactics', action='store_true', help='show tactics')
 
     cmd_args = parser.parse_args()
     scan_tactic = ""
@@ -99,8 +98,6 @@ if __name__ == "__main__":
     if cmd_args.show_tactics:
         get_mitre_tactics()
         sys.exit()
-        
-    k_path = kubectl_path()
 
     if scan_tactic in mitre_tactics:
         print_logo()
@@ -118,5 +115,3 @@ if __name__ == "__main__":
         print_logo()
         puts(colored.red("Please choose a tactic using --tactic TACTIC_NAME"))
         sys.exit()
-
-

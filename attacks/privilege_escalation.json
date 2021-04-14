@@ -6,6 +6,7 @@
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
+    "args": "False",
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.privileged == true)).metadata.name'",
     "leading_to": ""
     },
@@ -16,6 +17,7 @@
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
+    "args": "False",
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.allowPrivilegeEscalation == true)).metadata.name'",
     "leading_to": ""
     },
@@ -26,6 +28,7 @@
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
+    "args": "False",
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.runAsUser == 0)).metadata.name'",
     "leading_to": ""
     },
@@ -36,6 +39,7 @@
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
+    "args": "False",
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.spec.containers[].securityContext.capabilities.add | index(\"SYS_ADMIN\") | select(. != null)).metadata.name'",
     "leading_to": ""
     }

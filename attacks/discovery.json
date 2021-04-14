@@ -6,6 +6,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get services --all-namespaces -o jsonpath='{range .items[?(@.spec.type==\"LoadBalancer\")]}{.status.loadBalancer.ingress[*].hostname}:{.spec.ports[*].port}{\"\\n\"}{end}'",
         "leading_to": ""
     },
@@ -16,6 +17,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get nodes --all-namespaces -o jsonpath='{range .items[*].status.addresses[?(@.type==\"ExternalIP\")]}{.address}{\"\\n\"}{end}'",
         "leading_to": ""
     },
@@ -26,6 +28,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "POD_NAME=$(kubectl get pods --namespace kube-system | grep kube-apiserver | head -1 | awk '{print $1}') && [ ! -z $POD_NAME ] && kubectl get pod $POD_NAME --namespace kube-system",
         "leading_to": ""
     },
@@ -36,6 +39,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "POD_NAME=$(kubectl get pods --namespace kube-system | grep kube-apiserver | head -1 | awk '{print $1}') && [ ! -z $POD_NAME ] && kubectl get pod $POD_NAME --namespace kube-system -o json | jq -r '.spec.containers | .[] |select(.name == \"kube-apiserver\")| .args'",
         "leading_to": ""
     },
@@ -46,6 +50,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get networkpolicy --all-namespaces -o jsonpath='{range .items[*]}{@.metadata.name}{\" \"}{@.spec[*]}{\" \"}{\"\\n\"}{end}'",
         "leading_to": ""
     },
@@ -56,6 +61,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get clusterrolebindings | grep \"ClusterRole/cluster-admin\"",
         "leading_to": "rk-ca06"
     },
@@ -66,6 +72,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( \"secrets\" )|select(. != null)).metadata.name'",
         "leading_to": "rk-ca06"
     },
@@ -76,6 +83,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( \"secrets\" )|select(. != null)).metadata.name'",
         "leading_to": ""
     },
@@ -86,6 +94,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( \"configmaps\" )|select(. != null)).metadata.name'",
         "leading_to": ""
     },
@@ -96,6 +105,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( \"configmaps\" )|select(. != null)).metadata.name'",
         "leading_to": ""
     },
@@ -106,6 +116,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[] | select(.resources.limits == null).name'",
         "leading_to": ""
     },
@@ -116,6 +127,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[].image' | sort | uniq",
         "leading_to": ""
     },
@@ -126,6 +138,7 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get clusterroles -o json | jq -r '.items[] | select(.rules[].resources | index( \"*\" )|select(. != null)).metadata.name'",
         "leading_to": ""
     },
@@ -136,7 +149,19 @@
         "tactic_id": "TA0007",
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
+        "args": false,
         "command": "kubectl get roles --all-namespaces -o json | jq -r '.items[] | select(.rules[].resources | index( \"*\" )|select(. != null)).metadata.name'",
+        "leading_to": ""
+    },
+    {
+        "id": "rk-ds15",
+        "name": "get-pv-claims",
+        "description": "get persistent volume claims",
+        "tactic_id": "TA0007",
+        "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
+        "mode": "passive",
+        "args": false,
+        "command": "kubectl get pvc --all-namespaces",
         "leading_to": ""
     }
 ]
