@@ -5,7 +5,7 @@ The lab demonstrates how an exploited ingress or unauthorized access to the ingr
 
 The lab uses several commands from red-kube to create the attack chain.
 
-**Lab Motivation:
+**Lab Motivation:**
 
 In Kubernetes the users, service accounts and application secrets are stored in the same secret management.
 The mixture between secrets related to the control plane and secrets related to the data plane generates a high risk.

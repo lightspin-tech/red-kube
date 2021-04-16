@@ -1,7 +1,7 @@
 ![red-kube](https://github.com/lightspin-tech/red-kube/blob/main/redcube.png)
 
 
-Red Team Kubernetes Based on kubectl
+Red Team Kubernetes Risk Assessment Based on kubectl
 ==============================
 
 Red Kube is a collection of kubectl commands to be used in k8s penetration testing or k8s security audit.
@@ -14,17 +14,38 @@ The project uses python3 to orchestrate the running commands in linux.
 **Warning: You should NOT use red-kube commands on a Kubernetes cluster that you don't own!**
 
 ## Prerequisites:
-kubectl (Ubuntu / Debian)
+
+python3 requirements
+```bash
+pip3 install -r requirements.txt
 ```
-sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+
+kubectl (Ubuntu / Debian)
+```bash
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
 sudo apt-get install -y kubectl
 ```
 
-jq
+kubectl (Red Hat based)
+```bash
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+yum install -y kubectl
 ```
+
+jq
+```bash
 sudo apt-get update -y
 sudo apt-get install -y jq
 ```

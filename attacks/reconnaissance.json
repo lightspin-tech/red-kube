@@ -1,0 +1,13 @@
+[
+    {
+        "id": "rk-re01",
+        "name": "k8s-nmap-scan",
+        "description": "run nmap scanning against the cluster ips",
+        "tactic_id": "TA0007",
+        "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
+        "mode": "active",
+        "args": false,
+        "command": "kubectl run -i --tty rk-nmap --image=securecodebox/nmap --restart=Never -- sh -c \"ip -o -f inet addr show | awk '/scope global/ {print $4}' | xargs nmap\"",
+        "leading_to": ""
+    }
+]

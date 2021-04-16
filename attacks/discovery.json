@@ -51,7 +51,7 @@
         "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
         "mode": "passive",
         "args": false,
-        "command": "kubectl get networkpolicy --all-namespaces -o jsonpath='{range .items[*]}{@.metadata.name}{\" \"}{@.spec[*]}{\" \"}{\"\\n\"}{end}'",
+        "command": "kubectl get networkpolicy --all-namespaces -o jsonpath='{range .items[*]}rule_name:{\" \"}{@.metadata.name}{\"\\n\"}namespace:{\" \"}{@.metadata.namespace}{\" \"}{\"\\n\"}rule:{\"\\n\"}{\"    \"}{@.spec.*}{\" \"}{\"\\n\"}{\"\\n\"}{end}'",
         "leading_to": ""
     },
     {
@@ -162,17 +162,6 @@
         "mode": "passive",
         "args": false,
         "command": "kubectl get pvc --all-namespaces",
-        "leading_to": ""
-    },
-    {
-        "id": "rk-ds16",
-        "name": "k8s-nmap-scan",
-        "description": "run nmap scanning against the cluster ips",
-        "tactic_id": "TA0007",
-        "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
-        "mode": "active",
-        "args": false,
-        "command": "kubectl delete pods rk-nmap & kubectl run -i --tty rk-nmap --image=securecodebox/nmap --restart=Never -- sh -c \"ip -o -f inet addr show | awk '/scope global/ {print $4}' | xargs nmap\"",
         "leading_to": ""
     }
 ]

@@ -8,7 +8,7 @@ from clint.textui import colored, puts, indent
 import time
 
 mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access", "persistence",
-                 "collection"]
+                 "collection", "defense_evasion", "execution", "reconaissance", "lateral_movement", "initial_access"]
 
 
 def kubectl_subproc(kubectl_command):
@@ -31,21 +31,21 @@ def get_mitre_tactics():
                 puts(colored.red("+ %s" % mitre_tactic))
 
 
-def run_kubectl(technique, scan_mode):
-    technique_command = technique['command']
-    technique_id = technique['id']
-    technique_leading_to = technique['leading_to']
-    technique_mode = technique['mode']
-    technique_args = technique['args']
+def run_kubectl(rk_technique, rk_scan_mode):
+    technique_command = rk_technique['command']
+    technique_id = rk_technique['id']
+    technique_leading_to = rk_technique['leading_to']
+    technique_mode = rk_technique['mode']
+    technique_args = rk_technique['args']
 
     puts(colored.white('\n'))
 
     with indent(4):
         puts(colored.yellow("ID:        "), newline=False), puts(colored.white("%s" % technique_id))
-        puts(colored.yellow("Technique: "), newline=False), puts(colored.white("%s" % technique['name']))
+        puts(colored.yellow("Technique: "), newline=False), puts(colored.white("%s" % rk_technique['name']))
         puts(colored.yellow("Command:   "), newline=False), puts(colored.white("%s" % technique_command))
 
-        if scan_mode == 'all' or technique_mode == scan_mode:
+        if rk_scan_mode == 'all' or technique_mode == rk_scan_mode:
             if not technique_args:
                 out, err = kubectl_subproc(technique_command)
 
@@ -63,6 +63,10 @@ def run_kubectl(technique, scan_mode):
 
                             if technique_leading_to:
                                 puts(colored.cyan("Leading to technique id: %s" % technique_leading_to))
+
+                    elif err:
+                        puts(colored.white('\n'))
+                        puts(colored.red(err.decode()))
 
                     else:
                         puts(colored.white('\n'))
@@ -85,6 +89,14 @@ def print_logo():
     puts(colored.white("            +++ WELCOME TO RED-KUBE +++\n\n"))
 
 
+def cleanup():
+    out, err = kubectl_subproc("kubectl delete namespace red-kube")
+
+    with indent(2):
+        puts(colored.green(out.decode()))
+        puts(colored.red(err.decode()))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', action='store', dest='mode', type=str,
@@ -92,6 +104,7 @@ if __name__ == "__main__":
     parser.add_argument('--tactic', action='store', dest='tactic', type=str,
                         help='specific tactic', required=False)
     parser.add_argument('--show_tactics', action='store_true', help='show tactics')
+    parser.add_argument('--cleanup', action='store_true', required=False)
 
     cmd_args = parser.parse_args()
     scan_tactic = ''
@@ -105,6 +118,10 @@ if __name__ == "__main__":
 
     if cmd_args.show_tactics:
         get_mitre_tactics()
+        sys.exit()
+
+    if cmd_args.cleanup:
+        cleanup()
         sys.exit()
 
     if scan_tactic in mitre_tactics:
