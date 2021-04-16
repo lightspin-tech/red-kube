@@ -9,8 +9,9 @@ The lab uses several commands from red-kube to create the attack chain.
 
 In Kubernetes the users, service accounts and application secrets are stored in the same secret management.
 The mixture between secrets related to the control plane and secrets related to the data plane generates a high risk.
+
 The lab takes advantage of that design flaw to steal the admin secret from the ingress controller with list all secrets permission.
-Any user or service account with the ability to list all secrets is a 'Shadow Admin' in the Kubernetes Cluster
+Any user or service account with the ability to list all secrets is a 'Shadow Admin' in the Kubernetes Cluster.
 
 ```
 -------------       -------------       --------------------        -----------------

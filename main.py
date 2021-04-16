@@ -8,7 +8,7 @@ from clint.textui import colored, puts, indent
 import time
 
 mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access", "persistence",
-                 "collection", "defense_evasion", "execution", "reconaissance", "lateral_movement", "initial_access"]
+                 "collection", "defense_evasion", "execution", "reconnaissance", "lateral_movement", "initial_access"]
 
 
 def kubectl_subproc(kubectl_command):
