@@ -1,7 +1,7 @@
 ![red-kube](https://github.com/lightspin-tech/red-kube/blob/main/redcube.png)
 
 
-Red Team Kubernetes Analysis Based on kubectl
+Red Team Adversary Emulation Based on kubectl
 ==============================
 
 Red Kube is a collection of kubectl commands to be used in k8s penetration testing or k8s security audit.
