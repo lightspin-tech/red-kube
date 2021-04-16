@@ -129,7 +129,7 @@
         "mode": "passive",
         "args": false,
         "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[].spec.containers[].image' | sort | uniq",
-        "leading_to": ""
+        "leading_to": "rk-pr02"
     },
     {
         "id": "rk-ds13",
@@ -162,6 +162,17 @@
         "mode": "passive",
         "args": false,
         "command": "kubectl get pvc --all-namespaces",
+        "leading_to": ""
+    },
+    {
+        "id": "rk-ds16",
+        "name": "k8s-nmap-scan",
+        "description": "run nmap scanning against the cluster ips",
+        "tactic_id": "TA0007",
+        "mitre_ref": "https://attack.mitre.org/tactics/TA0007/",
+        "mode": "active",
+        "args": false,
+        "command": "kubectl delete pods rk-nmap & kubectl run -i --tty rk-nmap --image=securecodebox/nmap --restart=Never -- sh -c \"ip -o -f inet addr show | awk '/scope global/ {print $4}' | xargs nmap\"",
         "leading_to": ""
     }
 ]

@@ -34,7 +34,7 @@
     },
     {
     "id": "rk-pe04",
-    "name": "get-run-user-0-containers",
+    "name": "get-sys-admin-containers",
     "description": "get pods with containers including system admin capability",
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",

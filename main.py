@@ -7,7 +7,8 @@ import termcolor
 from clint.textui import colored, puts, indent
 import time
 
-mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access", "persistence"]
+mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "credential_access", "persistence",
+                 "collection"]
 
 
 def kubectl_subproc(kubectl_command):
@@ -30,7 +31,7 @@ def get_mitre_tactics():
                 puts(colored.red("+ %s" % mitre_tactic))
 
 
-def run_kubectl(technique):
+def run_kubectl(technique, scan_mode):
     technique_command = technique['command']
     technique_id = technique['id']
     technique_leading_to = technique['leading_to']
@@ -44,32 +45,38 @@ def run_kubectl(technique):
         puts(colored.yellow("Technique: "), newline=False), puts(colored.white("%s" % technique['name']))
         puts(colored.yellow("Command:   "), newline=False), puts(colored.white("%s" % technique_command))
 
-        if technique_mode == 'passive':
+        if scan_mode == 'all' or technique_mode == scan_mode:
             if not technique_args:
                 out, err = kubectl_subproc(technique_command)
-        else:
-            puts(colored.red("This is an active command, it might need specific parameters, run on your own."))
-            time.sleep(2)
-            sys.exit()
-
-        with indent(2):
-
-            if out:
-                puts(colored.white('\n'))
-                if scan_tactic == 'persistence':
-                    puts(colored.green('  command output: \n'))
-                else:
-                    puts(colored.green('✔  found\n'))
 
                 with indent(2):
-                    puts(colored.green(out.decode()))
 
-                    if technique_leading_to:
-                        puts(colored.yellow("Leading to technique id: %s" % technique_leading_to))
+                    if out:
+                        puts(colored.white('\n'))
+                        if technique_mode == 'active':
+                            puts(colored.green('✔  command output: \n'))
+                        else:
+                            puts(colored.green('✔  found, printing output:\n'))
+
+                        with indent(2):
+                            puts(colored.green(out.decode()))
+
+                            if technique_leading_to:
+                                puts(colored.cyan("Leading to technique id: %s" % technique_leading_to))
+
+                    else:
+                        puts(colored.white('\n'))
+                        puts(colored.red('✘  none found\n'))
 
             else:
-                puts(colored.white('\n'))
-                puts(colored.red('✘  none found\n'))
+                with indent(4):
+                    puts(colored.red("✘  This command might need specific parameters, run on your own."))
+                    time.sleep(2)
+
+        else:
+            with indent(4):
+                puts(colored.red("✘  This command mode does not match your scan mode."))
+                time.sleep(2)
 
 
 def print_logo():
@@ -80,17 +87,18 @@ def print_logo():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--type', action='store', dest='type', type=str,
-                        help='scan type (passive/active)', required=False)
+    parser.add_argument('--mode', action='store', dest='mode', type=str,
+                        help='scan mode (passive/active/all)', required=False, default='passive')
     parser.add_argument('--tactic', action='store', dest='tactic', type=str,
                         help='specific tactic', required=False)
     parser.add_argument('--show_tactics', action='store_true', help='show tactics')
 
     cmd_args = parser.parse_args()
-    scan_tactic = ""
+    scan_tactic = ''
+    scan_mode = 'passive'
 
-    if cmd_args.type:
-        scan_type = cmd_args.type
+    if cmd_args.mode:
+        scan_mode = cmd_args.mode
 
     if cmd_args.tactic:
         scan_tactic = cmd_args.tactic
@@ -108,7 +116,7 @@ if __name__ == "__main__":
             tactic_data = json.load(tactic_file)
 
             for technique in tactic_data:
-                run_kubectl(technique)
+                run_kubectl(technique, scan_mode)
                 time.sleep(1)
 
     else:

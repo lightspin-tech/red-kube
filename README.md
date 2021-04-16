@@ -1,14 +1,15 @@
 ![red-kube](https://github.com/lightspin-tech/red-kube/blob/main/redcube.png)
 
 
-Red Team KubeCTL Cheat Sheet
+Red Team Kubernetes Based on kubectl
 ==============================
 
-Red Kube is a red team cheat sheet based on kubectl commands.
-The project helps achieve the right point of view for your Kubernetes Security Posture from the attacker's perspective.
+Red Kube is a collection of kubectl commands to be used in k8s penetration testing or k8s security audit.
+The project helps achieve the right point of view for your Kubernetes Security Posture from the attacker's perspective by leveraging the extensive capabilities in kubectl and linux commands.
 
 The commands are either active or passive with mapping to the MITRE ATT&CK Matrix.
 
+The project uses python3 to orchestrate the running commands in linux.
 
 **Warning: You should NOT use red-kube commands on a Kubernetes cluster that you don't own!**
 
@@ -32,16 +33,16 @@ sudo apt-get install -y jq
 | Tactic | Count |
 |-------|---------|
 | Initial Access  | 0 |
-| Execution | 1 |
-| Persistence | 0 |
+| Execution | 0 |
+| Persistence | 2 |
 | Privilege Escalation | 4 |
 | Defense Evasion | 0 |
-| Credential Access | 7 |
-| Discovery | 14 |
+| Credential Access | 8 |
+| Discovery | 16 |
 | Lateral Movement | 0 |
-| Collection | 0 |
-| Command and Control | 1 |
-| Exfiltration | 0 |
+| Collection | 3 |
+| Command and Control | 2 |
+| Exfiltration | 1 |
 | Impact | 0 |
 
 ## Webinars
@@ -51,11 +52,7 @@ sudo apt-get install -y jq
 
 ## TODO
 
-Initial Access: Find Public IPs
-
 Defense Evasion: Delete API Audit Logs
-
-Privilege Escalation: Using escalate verb
 
 Collection: Dump all configmaps and env to a file
 
