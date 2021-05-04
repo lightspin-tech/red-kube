@@ -12,10 +12,36 @@ mitre_tactics = ["privilege_escalation", "discovery", "command_and_control", "cr
 
 
 def kubectl_subproc(kubectl_command):
-    k_proc = subprocess.Popen(kubectl_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = k_proc.communicate()
+    k_proc = subprocess.run(kubectl_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout = k_proc.stdout
+    stderr = k_proc.stderr
 
     return stdout, stderr
+
+
+def kubectl_print(k_out, k_err, k_mode, k_lead):
+    with indent(2):
+
+        if k_out:
+            puts(colored.white('\n'))
+            if k_mode == 'active':
+                puts(colored.green('✔  command output: \n'))
+            else:
+                puts(colored.green('✔  found, printing output:\n'))
+
+            with indent(2):
+                puts(colored.green(k_out.decode()))
+
+                if k_lead:
+                    puts(colored.cyan("Leading to technique id: %s" % k_lead))
+
+        elif k_err:
+            puts(colored.white('\n'))
+            puts(colored.red(k_err.decode()))
+
+        else:
+            puts(colored.white('\n'))
+            puts(colored.red('✘  none found\n'))
 
 
 def get_mitre_tactics():
@@ -32,12 +58,14 @@ def get_mitre_tactics():
 
 
 def run_kubectl(rk_technique, rk_scan_mode):
-    technique_command = rk_technique['command']
+    technique_command = rk_technique.get('command')
     technique_id = rk_technique['id']
     technique_leading_to = rk_technique['leading_to']
     technique_mode = rk_technique['mode']
     technique_args = rk_technique['args']
-
+    technique_arg_list = rk_technique.get('arg_list')
+    technique_multistep = rk_technique['multistep']
+    technique_steps = rk_technique.get('commands')
     puts(colored.white('\n'))
 
     with indent(4):
@@ -47,34 +75,33 @@ def run_kubectl(rk_technique, rk_scan_mode):
 
         if rk_scan_mode == 'all' or technique_mode == rk_scan_mode:
             if not technique_args:
-                out, err = kubectl_subproc(technique_command)
 
-                with indent(2):
+                if not technique_multistep:
 
-                    if out:
-                        puts(colored.white('\n'))
-                        if technique_mode == 'active':
-                            puts(colored.green('✔  command output: \n'))
-                        else:
-                            puts(colored.green('✔  found, printing output:\n'))
+                    out, err = kubectl_subproc(technique_command)
+                    kubectl_print(out, err, technique_mode, technique_leading_to)
 
-                        with indent(2):
-                            puts(colored.green(out.decode()))
+                else:
+                    for cmd_step in technique_steps:
 
-                            if technique_leading_to:
-                                puts(colored.cyan("Leading to technique id: %s" % technique_leading_to))
-
-                    elif err:
-                        puts(colored.white('\n'))
-                        puts(colored.red(err.decode()))
-
-                    else:
-                        puts(colored.white('\n'))
-                        puts(colored.red('✘  none found\n'))
+                        out, err = kubectl_subproc(cmd_step)
+                        kubectl_print(out, err, technique_mode, technique_leading_to)
+                        time.sleep(2)
 
             else:
                 with indent(4):
-                    puts(colored.red("✘  This command might need specific parameters, run on your own."))
+
+                    puts(colored.white('\n'))
+                    puts(colored.red("✘  The command requires specific parameters:"))
+                    puts(colored.white('\n'))
+
+                    for arg in technique_arg_list:
+                        x = input("         %s:" % arg)
+                        technique_command = technique_command.replace("$%s" % arg, x)
+
+                    puts(colored.green("✔  command updated, running: ", technique_command))
+                    out, err = kubectl_subproc(technique_command)
+                    kubectl_print(out, err, technique_mode, technique_leading_to)
                     time.sleep(2)
 
         else:
@@ -90,7 +117,7 @@ def print_logo():
 
 
 def cleanup():
-    out, err = kubectl_subproc("kubectl delete namespace red-kube")
+    out, err = kubectl_subproc("kubectl delete pods trivy awscli")
 
     with indent(2):
         puts(colored.green(out.decode()))
@@ -127,7 +154,8 @@ if __name__ == "__main__":
     if scan_tactic in mitre_tactics:
         print_logo()
         scan_tactic = scan_tactic
-        puts(colored.red("%s tactic chosen " % scan_tactic))
+        with indent(4):
+            puts(colored.red("MITRE ATT&CK Tactic %s chosen " % scan_tactic))
 
         with open('attacks/%s.json' % scan_tactic) as tactic_file:
             tactic_data = json.load(tactic_file)

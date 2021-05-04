@@ -1,46 +1,50 @@
 [
-    {
+  {
     "id": "rk-pe01",
     "name": "get-privileged-containers",
     "description": "get pods with privileged containers",
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
-    "args": "False",
+    "multistep": false,
+    "args": false,
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.privileged == true)).metadata.name'",
     "leading_to": ""
-    },
-    {
+  },
+  {
     "id": "rk-pe02",
     "name": "get-allow-pe-containers",
     "description": "get pods with containers allowed to perform privilege escalation",
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
-    "args": "False",
+    "multistep": false,
+    "args": false,
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.allowPrivilegeEscalation == true)).metadata.name'",
     "leading_to": ""
-    },
-    {
+  },
+  {
     "id": "rk-pe03",
     "name": "get-run-user-0-containers",
     "description": "get pods with containers running as root",
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
-    "args": "False",
+    "multistep": false,
+    "args": false,
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[]|select(.spec.containers[].securityContext | select(.runAsUser == 0)).metadata.name'",
     "leading_to": ""
-    },
-    {
+  },
+  {
     "id": "rk-pe04",
     "name": "get-sys-admin-containers",
     "description": "get pods with containers including system admin capability",
     "tactic_id": "TA0004",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0004/",
     "mode": "passive",
-    "args": "False",
+    "multistep": false,
+    "args": false,
     "command": "kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.spec.containers[].securityContext.capabilities.add | index(\"SYS_ADMIN\") | select(. != null)).metadata.name'",
     "leading_to": ""
-    }
+  }
 ]

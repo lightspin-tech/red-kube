@@ -1,35 +1,19 @@
 [
-    {
-        "id": "rk-co01",
-        "name": "collect-images-to-trivy",
-        "description": "collect cluster images",
-        "tactic_id": "TA0009",
-        "mitre_ref": "https://attack.mitre.org/tactics/TA0009/",
-        "mode": "active",
-        "args": "False",
-        "command": "kubectl get pods --all-namespaces -o jsonpath=\"{..image}\" | tr -s '[[:space:]]' '\\n' | sort | uniq > images_list && kubectl cp images_list trivy:images_list",
-        "leading_to": "rk-co02"
-    },
-    {
-        "id": "rk-co02",
-        "name": "scan-image-cves",
-        "description": "collect cves from running images",
-        "tactic_id": "TA0009",
-        "mitre_ref": "https://attack.mitre.org/tactics/TA0009/",
-        "mode": "active",
-        "args": "False",
-        "command": "kubectl exec --stdin --tty trivy -- sh -c \"mkdir scan_results && cat images_list | xargs -I @@ sh -c 'OUT=scan_results/\\`echo @@ | tr / _\\`; trivy image @@ >> \\${OUT}'\"",
-        "leading_to": ["rk-ex01", "rk-ca07"]
-    },
-    {
-        "id": "rk-co03",
-        "name": "print-copy-trivy-results",
-        "description": "print and copy trivy results localy",
-        "tactic_id": "TA0009",
-        "mitre_ref": "https://attack.mitre.org/tactics/TA0009/",
-        "mode": "passove",
-        "args": "False",
-        "command": "kubectl exec --stdin --tty trivy -- sh -c \"grep -i \"critical\" scan_results/*",
-        "leading_to": ""
-    }
+  {
+    "id": "rk-co01",
+    "name": "trivy-cve-scanning",
+    "description": "run trivy, collect cluster images and scan for cves",
+    "tactic_id": "TA0009",
+    "mitre_ref": "https://attack.mitre.org/tactics/TA0009/",
+    "mode": "active",
+    "multistep": true,
+    "args": false,
+    "commands": [
+      "cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: trivy\nspec:\n  containers:\n  - image: aquasec/trivy\n    name: trivy-scanner\n    command: ['sleep', 'infinity']\nEOF",
+      "kubectl get pods --all-namespaces -o jsonpath=\"{..image}\" | tr -s '[[:space:]]' '\\n' | sort | uniq > images_list && kubectl cp images_list trivy:images_list",
+      "kubectl exec --stdin --tty trivy -- sh -c \"mkdir scan_results && cat images_list | xargs -I @@ sh -c 'OUT=scan_results/\\`echo @@ | tr / _\\`; trivy image @@ >> \\${OUT}'\"",
+      "kubectl cp trivy:scan_results scan_results"
+    ],
+    "leading_to": ""
+  }
 ]

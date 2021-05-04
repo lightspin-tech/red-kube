@@ -1,24 +1,30 @@
 [
-    {
+  {
     "id": "rk-pr01",
     "name": "aws-cli-pod",
     "description": "create aws-cli pod",
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
-    "args": "False",
-    "command": "cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n    name: awscli\nspec:\n    hostNetwork: true\n    containers:\n    - name: aws-cli\n      image: amazon/aws-cli:latest\n      command: ['sleep', 'infinity']\n      volumeMounts:\n      - name: mypvc\n        mountPath: /data\n    volumes:\n    - name: mypvc\n      persistentVolumeClaim:\n        claimName: <REPLACE_WITH_PV>\nEOF",
-    "leading_to": ["rk-ex01", "rk-ca07"]
-    },
-    {
+    "multistep": false,
+    "args": true,
+    "arg_list": ["PV"],
+    "command": "cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n    name: awscli\nspec:\n    hostNetwork: true\n    containers:\n    - name: aws-cli\n      image: amazon/aws-cli:latest\n      command: ['sleep', 'infinity']\n      volumeMounts:\n      - name: mypvc\n        mountPath: /data\n    volumes:\n    - name: mypvc\n      persistentVolumeClaim:\n        claimName: $PV\nEOF",
+    "leading_to": [
+      "rk-ex01",
+      "rk-ca07"
+    ]
+  },
+  {
     "id": "rk-pr02",
-    "name": "trivy-pod",
-    "description": "create trivy pod",
+    "name": "persistent-stealth-pod",
+    "description": "creates a stealth pod in the kube-system namespace",
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
-    "args": "False",
-    "command": "cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: trivy\nspec:\n  containers:\n  - image: aquasec/trivy\n    name: trivy-scanner\n    command: ['sleep', 'infinity']\nEOF",
-    "leading_to": ["rk-ex01", "rk-ca07"]
-    }
+    "multistep": false,
+    "args": false,
+    "command": "UUID=$(uuidgen -r | cut -c1-5) && cat <<EOF | kubectl apply -f -\napiVersion: v1\nkind: Pod\nmetadata:\n  name: kube-proxy-$UUID\n  namespace: kube-system\nspec:\n  containers:\n  - image: alpine:latest\n    name: alpine\n    command: ['sleep', 'infinity']\nEOF",
+    "leading_to": ""
+  }
 ]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "rk-de01",
+    "name": "find-audit-logs",
+    "description": "finds the audit log path",
+    "tactic_id": "TA0005",
+    "mitre_ref": "https://attack.mitre.org/tactics/TA0005/",
+    "mode": "passive",
+    "multistep": false,
+    "args": false,
+    "command": "kubectl get pods --namespace kube-system | grep kube-apiserver | awk '{print $1}' | xargs -I @@ sh -c 'kubectl get pod @@ --namespace kube-system  -o json | jq -r \".spec.containers[].args[] | select(.|contains(\\\"--audit\\\"))\"'",
+    "leading_to": ""
+  }
+]

