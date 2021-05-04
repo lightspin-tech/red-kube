@@ -1,5 +1,6 @@
 ![red-kube](https://github.com/lightspin-tech/red-kube/blob/main/redcube.png)
 
+[![Github All Releases](https://img.shields.io/github/downloads/lightspin-tech/red-kube/total.svg)]()
 
 Red Team K8S Adversary Emulation Based on kubectl
 ==============================
