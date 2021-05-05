@@ -4,12 +4,16 @@
 Red Team K8S Adversary Emulation Based on kubectl
 ==============================
 
-Red Kube is a collection of kubectl commands to be used in k8s penetration testing or k8s security audit.
-The project helps achieve the right point of view for your Kubernetes Security Posture from the attacker's perspective by leveraging the extensive capabilities in kubectl and linux commands.
+Red Kube is a collection of kubectl commands written to evaluate the security posture of Kubernetes clusters from the attacker's perspective.
 
-The commands are either active or passive with mapping to the MITRE ATT&CK Matrix.
+The commands are either passive for data collection and information disclosure or active for performing real actions that affect the cluster.
 
-The project uses python3 to orchestrate the running commands in linux.
+The commands are mapped to MITRE ATT&CK Tactics to help get a sense of where we have most of our gaps and prioritize our findings.
+
+The current version is wrapped with a python orchestration module to run several commands in one run based on different scenarios or tactics.
+
+Please use with care as some commands are active and actively deploy new containers or change the role-based access control configuration.
+
 
 **Warning: You should NOT use red-kube commands on a Kubernetes cluster that you don't own!**
 
@@ -50,6 +54,20 @@ sudo apt-get update -y
 sudo apt-get install -y jq
 ```
 
+## Usage
+```bash
+usage: python3 main.py [-h] [--mode active/passive/all] [--tactic TACTIC_NAME] [--show_tactics] [--cleanup]
+
+required arguments:
+--mode            run kubectl commands which are active / passive / all modes
+--tactic          choose tactic
+
+other arguments:
+-h --help         show this help message and exit
+--show_tactics    show all tactics
+
+```
+
 ### Commands by MITRE ATT&CK Tactics
 | Tactic | Count |
 |-------|---------|
@@ -68,18 +86,23 @@ sudo apt-get install -y jq
 | Impact | 0 |
 
 ## Webinars
-#1 First Workshop with Lab01 and Lab02 [Webinar Link](https://www.lightspin.io/kubernetes-security-concepts-workshop)
+### 1 First Workshop with Lab01 and Lab02 [Webinar Link](https://www.lightspin.io/kubernetes-security-concepts-workshop)
 
-#2 Second Workshop with Lab03 and Lab04 [Webinar Link](https://www.lightspin.io/webishop-specific-container-security-in-kubernetes)
+### 2 Second Workshop with Lab03 and Lab04 [Webinar Link](https://www.lightspin.io/webishop-specific-container-security-in-kubernetes)
 
-## BlackHat Asia 2021 Presentation
-#https://www.blackhat.com/asia-21/arsenal/schedule/#red-kube-22401
+## Presentations
+### [BlackHat Asia 2021](https://www.blackhat.com/asia-21/arsenal/schedule/#red-kube-22401)
 
-## TODO
+## Q&A
+# why choosing kubectl and not using the kubernetes api in python?
+When performing red team assessments and adversary emulations, the quick manipulations and tweaks for the tools used in the arsenal are critical.
 
-Defense Evasion: Delete API Audit Logs
+The ability to run such assessments and combine the k8s attack techniques based on kubectl and powerful Linux commands reduces the time and effort significantly.
 
-Collection: Dump all configmaps and env to a file
 
-## License
+### Contact Us
+This research was held by Lightspin's Security Research Team.
+For more information, contact us at support@lightspin.io.
+
+### License
 This repository is available under the [Apache License 2.0](https://github.com/lightspin-tech/red-kube/blob/main/LICENSE).
