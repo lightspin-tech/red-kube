@@ -86,15 +86,15 @@ other arguments:
 | Impact | 0 |
 
 ## Webinars
-### 1 First Workshop with Lab01 and Lab02 [Webinar Link](https://www.lightspin.io/kubernetes-security-concepts-workshop)
+**1 First Workshop with Lab01 and Lab02 [Webinar Link](https://www.lightspin.io/kubernetes-security-concepts-workshop)**
 
-### 2 Second Workshop with Lab03 and Lab04 [Webinar Link](https://www.lightspin.io/webishop-specific-container-security-in-kubernetes)
+**2 Second Workshop with Lab03 and Lab04 [Webinar Link](https://www.lightspin.io/webishop-specific-container-security-in-kubernetes)**
 
 ## Presentations
-### [BlackHat Asia 2021](https://www.blackhat.com/asia-21/arsenal/schedule/#red-kube-22401)
+**[BlackHat Asia 2021](https://www.blackhat.com/asia-21/arsenal/schedule/#red-kube-22401)**
 
 ## Q&A
-# why choosing kubectl and not using the kubernetes api in python?
+**Why choosing kubectl and not using the kubernetes api in python?**
 When performing red team assessments and adversary emulations, the quick manipulations and tweaks for the tools used in the arsenal are critical.
 
 The ability to run such assessments and combine the k8s attack techniques based on kubectl and powerful Linux commands reduces the time and effort significantly.
