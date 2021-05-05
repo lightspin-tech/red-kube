@@ -95,6 +95,7 @@ other arguments:
 
 ## Q&A
 **Why choosing kubectl and not using the kubernetes api in python?**
+
 When performing red team assessments and adversary emulations, the quick manipulations and tweaks for the tools used in the arsenal are critical.
 
 The ability to run such assessments and combine the k8s attack techniques based on kubectl and powerful Linux commands reduces the time and effort significantly.
