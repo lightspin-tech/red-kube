@@ -64,7 +64,7 @@ def run_kubectl(rk_technique, rk_scan_mode):
     technique_mode = rk_technique['mode']
     technique_args = rk_technique['args']
     technique_arg_list = rk_technique.get('arg_list')
-    technique_multistep = rk_technique['multistep']
+    technique_multistep = rk_technique.get('multistep')
     technique_steps = rk_technique.get('commands')
     puts(colored.white('\n'))
 
